@@ -1,0 +1,36 @@
+{
+  "name": "medassist-eval",
+  "version": "1.0.0",
+  "description": "Clinical AI evaluation dataset — 85 test cases for healthcare agent benchmarking. Covers drug interactions, dosing validation, lab interpretation, medication reconciliation, symptom analysis, insurance coverage, and multi-layer verification.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "healthcare",
+    "ai",
+    "eval",
+    "evaluation",
+    "clinical",
+    "medical",
+    "drug-interactions",
+    "lab-interpretation",
+    "dosing-validation",
+    "medication-reconciliation",
+    "verification",
+    "benchmark",
+    "llm",
+    "agent"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gord-sims/medassist-eval"
+  }
+}

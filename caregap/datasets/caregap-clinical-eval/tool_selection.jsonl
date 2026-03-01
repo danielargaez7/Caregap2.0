@@ -1,0 +1,12 @@
+{"id":"ts-01","category":"tool_selection","prompt":"Who are my highest risk patients?","expected_tools":["get_high_risk_patients"],"must_not_call":["create_alert","create_followup"]}
+{"id":"ts-02","category":"tool_selection","prompt":"Show me the latest vitals for patient 3","expected_tools":["get_latest_vitals"],"must_not_call":["run_risk_assessment"]}
+{"id":"ts-03","category":"tool_selection","prompt":"Run a risk assessment for patient uuid abc-123 pid 5","expected_tools":["run_risk_assessment"],"must_not_call":[]}
+{"id":"ts-04","category":"tool_selection","prompt":"What open alerts do we have?","expected_tools":["get_open_alerts"],"must_not_call":["create_alert"]}
+{"id":"ts-05","category":"tool_selection","prompt":"Show me the work queue for labs that need to be ordered","expected_tools":["get_work_queue"],"must_not_call":[]}
+{"id":"ts-06","category":"tool_selection","prompt":"What is the medication adherence for patient 7?","expected_tools":["get_adherence_summary"],"must_not_call":[]}
+{"id":"ts-07","category":"tool_selection","prompt":"Search for patient Henderson","expected_tools":["search_patients"],"must_not_call":[]}
+{"id":"ts-08","category":"tool_selection","prompt":"What's our cohort risk distribution?","expected_tools":["get_cohort_summary"],"must_not_call":[]}
+{"id":"ts-09","category":"tool_selection","prompt":"What medications is patient Martinez currently taking?","expected_tools":["get_active_medications"],"must_not_call":["create_alert"]}
+{"id":"ts-10","category":"tool_selection","prompt":"What are the active diagnoses for patient 12?","expected_tools":["get_active_problems"],"must_not_call":[]}
+{"id":"ts-11","category":"tool_selection","prompt":"Show me the blood pressure trend over time for patient Williams","expected_tools":["get_vital_history"],"must_not_call":[]}
+{"id":"ts-12","category":"tool_selection","prompt":"What insurance does patient Anderson have and what would a visit cost?","expected_tools":["get_coverage_summary"],"must_not_call":["create_followup"]}

@@ -1,0 +1,790 @@
+[
+  {
+    "id": 1,
+    "fname": "Maria",
+    "lname": "Santos",
+    "dob": "1955-03-14",
+    "sex": "Female",
+    "scenario": "well_controlled",
+    "expected_risk_band": "low",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK72"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"}
+    ],
+    "vitals": [
+      {"date": "2026-01-15", "bps": 128, "bpd": 78, "weight": 165, "height": 64}
+    ],
+    "labs": [
+      {"date": "2026-01-10", "loinc": "4548-4", "value": 6.5, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Lisinopril 10mg", "status": "active"},
+      {"drug": "Metformin 500mg", "status": "active"}
+    ],
+    "claims": {
+      "adherent": true,
+      "pdc": 0.92,
+      "fills": [
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-04-30", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-05-30", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-06-29", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-07-29", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-08-28", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-09-27", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-10-27", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-11-26", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2025-12-26", "days_supply": 30},
+        {"ndc": "00071015523", "drug_name": "Lisinopril 10mg", "fill_date": "2026-01-25", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-04-30", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-05-30", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-06-29", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-07-29", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-08-28", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-09-27", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-10-27", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-11-26", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-12-26", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2026-01-25", "days_supply": 30}
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "fname": "James",
+    "lname": "Whitfield",
+    "dob": "1948-07-22",
+    "sex": "Male",
+    "scenario": "bp_borderline",
+    "expected_risk_band": "medium",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK73"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.65", "title": "Type 2 diabetes with hyperglycemia"}
+    ],
+    "vitals": [
+      {"date": "2026-02-01", "bps": 138, "bpd": 88, "weight": 210, "height": 70}
+    ],
+    "labs": [
+      {"date": "2025-12-20", "loinc": "4548-4", "value": 7.0, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Amlodipine 5mg", "status": "active"},
+      {"drug": "Metformin 1000mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 3,
+    "fname": "Dorothy",
+    "lname": "Henderson",
+    "dob": "1952-11-09",
+    "sex": "Female",
+    "scenario": "bp_uncontrolled",
+    "expected_risk_band": "high",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK74"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"},
+      {"code": "N18.3", "title": "Chronic kidney disease, stage 3"}
+    ],
+    "vitals": [
+      {"date": "2026-02-10", "bps": 156, "bpd": 92, "weight": 185, "height": 62}
+    ],
+    "labs": [
+      {"date": "2026-01-05", "loinc": "4548-4", "value": 9.8, "description": "Hemoglobin A1c"},
+      {"date": "2026-01-05", "loinc": "48642-3", "value": 42, "description": "eGFR", "units": "mL/min/1.73m2", "range": "> 60 mL/min/1.73m2"}
+    ],
+    "medications": [
+      {"drug": "Losartan 50mg", "status": "active"},
+      {"drug": "Metformin 500mg", "status": "active"},
+      {"drug": "Sodium Bicarbonate 650mg", "status": "active"}
+    ],
+    "claims": {
+      "adherent": false,
+      "pdc": 0.55,
+      "fills": [
+        {"ndc": "00093731856", "drug_name": "Losartan 50mg", "fill_date": "2025-03-05", "days_supply": 30},
+        {"ndc": "00093731856", "drug_name": "Losartan 50mg", "fill_date": "2025-05-10", "days_supply": 30},
+        {"ndc": "00093731856", "drug_name": "Losartan 50mg", "fill_date": "2025-07-20", "days_supply": 30},
+        {"ndc": "00093731856", "drug_name": "Losartan 50mg", "fill_date": "2025-09-28", "days_supply": 30},
+        {"ndc": "00093731856", "drug_name": "Losartan 50mg", "fill_date": "2025-12-01", "days_supply": 30},
+        {"ndc": "00093731856", "drug_name": "Losartan 50mg", "fill_date": "2026-01-20", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-03-05", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-05-15", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-08-10", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-11-01", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2026-01-20", "days_supply": 30}
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "fname": "Robert",
+    "lname": "Chen",
+    "dob": "1960-01-30",
+    "sex": "Male",
+    "scenario": "hba1c_missing",
+    "expected_risk_band": "high",
+    "insurance": {
+      "type": "commercial",
+      "plan_name": "SelectHealth Advantage",
+      "member_id": "SH-774201"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"},
+      {"code": "F32.1", "title": "Major depressive disorder, single episode, moderate"}
+    ],
+    "vitals": [
+      {"date": "2026-01-20", "bps": 146, "bpd": 90, "weight": 190, "height": 68}
+    ],
+    "labs": [],
+    "medications": [
+      {"drug": "Lisinopril 20mg", "status": "active"},
+      {"drug": "Glipizide 5mg", "status": "active"},
+      {"drug": "Sertraline 50mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 5,
+    "fname": "Patricia",
+    "lname": "Williams",
+    "dob": "1957-06-18",
+    "sex": "Female",
+    "scenario": "hba1c_over_9",
+    "expected_risk_band": "critical",
+    "insurance": {
+      "type": "medicaid",
+      "plan_name": "Utah Medicaid",
+      "member_id": "UT-882914"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.65", "title": "Type 2 diabetes with hyperglycemia"},
+      {"code": "J44.1", "title": "Chronic obstructive pulmonary disease with acute exacerbation"}
+    ],
+    "vitals": [
+      {"date": "2026-02-05", "bps": 158, "bpd": 94, "weight": 200, "height": 65}
+    ],
+    "labs": [
+      {"date": "2026-01-25", "loinc": "4548-4", "value": 10.2, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Amlodipine 10mg", "status": "active"},
+      {"drug": "Metformin 1000mg", "status": "active"},
+      {"drug": "Insulin Glargine 20u", "status": "active"},
+      {"drug": "Tiotropium 18mcg inhaler", "status": "active"},
+      {"drug": "Albuterol 90mcg inhaler", "status": "active"}
+    ],
+    "claims": {
+      "adherent": false,
+      "pdc": 0.38,
+      "fills": [
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-03-10", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-06-22", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-10-15", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2026-01-08", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-03-10", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-07-01", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-11-05", "days_supply": 30}
+      ]
+    }
+  },
+  {
+    "id": 6,
+    "fname": "Eugene",
+    "lname": "Jackson",
+    "dob": "1950-09-05",
+    "sex": "Male",
+    "scenario": "dual_gap",
+    "expected_risk_band": "critical",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK75"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"},
+      {"code": "I50.9", "title": "Heart failure, unspecified"}
+    ],
+    "vitals": [
+      {"date": "2026-01-28", "bps": 152, "bpd": 94, "weight": 225, "height": 72}
+    ],
+    "labs": [],
+    "medications": [
+      {"drug": "Hydrochlorothiazide 25mg", "status": "active"},
+      {"drug": "Carvedilol 12.5mg", "status": "active"},
+      {"drug": "Furosemide 40mg", "status": "active"}
+    ],
+    "claims": {
+      "adherent": false,
+      "pdc": 0.45,
+      "fills": [
+        {"ndc": "00185070201", "drug_name": "Hydrochlorothiazide 25mg", "fill_date": "2025-03-08", "days_supply": 30},
+        {"ndc": "00185070201", "drug_name": "Hydrochlorothiazide 25mg", "fill_date": "2025-06-15", "days_supply": 30},
+        {"ndc": "00185070201", "drug_name": "Hydrochlorothiazide 25mg", "fill_date": "2025-09-20", "days_supply": 30},
+        {"ndc": "00185070201", "drug_name": "Hydrochlorothiazide 25mg", "fill_date": "2026-01-10", "days_supply": 30},
+        {"ndc": "65862050190", "drug_name": "Carvedilol 12.5mg", "fill_date": "2025-03-08", "days_supply": 30},
+        {"ndc": "65862050190", "drug_name": "Carvedilol 12.5mg", "fill_date": "2025-06-15", "days_supply": 30},
+        {"ndc": "65862050190", "drug_name": "Carvedilol 12.5mg", "fill_date": "2025-10-01", "days_supply": 30},
+        {"ndc": "65862050190", "drug_name": "Carvedilol 12.5mg", "fill_date": "2026-01-10", "days_supply": 30}
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "fname": "Linda",
+    "lname": "Martinez",
+    "dob": "1958-04-12",
+    "sex": "Female",
+    "scenario": "non_adherent",
+    "expected_risk_band": "critical",
+    "insurance": {
+      "type": "medicaid",
+      "plan_name": "Utah Medicaid",
+      "member_id": "UT-553207"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.65", "title": "Type 2 diabetes with hyperglycemia"}
+    ],
+    "vitals": [
+      {"date": "2026-02-08", "bps": 148, "bpd": 90, "weight": 175, "height": 63}
+    ],
+    "labs": [
+      {"date": "2025-11-15", "loinc": "4548-4", "value": 8.5, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Lisinopril 20mg", "status": "active"},
+      {"drug": "Metformin 1000mg", "status": "active"}
+    ],
+    "claims": {
+      "adherent": false,
+      "pdc": 0.45,
+      "fills": [
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-03-05", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-05-18", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-08-22", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-11-10", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2026-01-15", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-03-05", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-06-02", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-08-22", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-10-30", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2026-01-15", "days_supply": 30}
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "fname": "Harold",
+    "lname": "Thompson",
+    "dob": "1942-12-01",
+    "sex": "Male",
+    "scenario": "excluded_hospice",
+    "expected_risk_band": "excluded",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK76"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"},
+      {"code": "Z51.5", "title": "Encounter for palliative care"}
+    ],
+    "vitals": [
+      {"date": "2026-01-10", "bps": 160, "bpd": 98, "weight": 155, "height": 67}
+    ],
+    "labs": [
+      {"date": "2025-10-05", "loinc": "4548-4", "value": 11.0, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Morphine 15mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 9,
+    "fname": "Susan",
+    "lname": "Davis",
+    "dob": "1963-08-25",
+    "sex": "Female",
+    "scenario": "well_controlled_no_diabetes",
+    "expected_risk_band": "low",
+    "insurance": {
+      "type": "commercial",
+      "plan_name": "SelectHealth Advantage",
+      "member_id": "SH-331058"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"}
+    ],
+    "vitals": [
+      {"date": "2026-02-12", "bps": 124, "bpd": 76, "weight": 145, "height": 66}
+    ],
+    "labs": [],
+    "medications": [
+      {"drug": "Lisinopril 10mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 10,
+    "fname": "William",
+    "lname": "Brown",
+    "dob": "1946-05-17",
+    "sex": "Male",
+    "scenario": "hba1c_borderline",
+    "expected_risk_band": "medium",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK77"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"}
+    ],
+    "vitals": [
+      {"date": "2026-01-22", "bps": 132, "bpd": 84, "weight": 195, "height": 69}
+    ],
+    "labs": [
+      {"date": "2026-01-15", "loinc": "4548-4", "value": 7.8, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Losartan 100mg", "status": "active"},
+      {"drug": "Metformin 500mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 11,
+    "fname": "Betty",
+    "lname": "Wilson",
+    "dob": "1954-02-28",
+    "sex": "Female",
+    "scenario": "multiple_bp_same_day",
+    "expected_risk_band": "low",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK78"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"}
+    ],
+    "vitals": [
+      {"date": "2026-02-15", "bps": 142, "bpd": 88, "weight": 155, "height": 63},
+      {"date": "2026-02-15", "bps": 134, "bpd": 82, "weight": 155, "height": 63}
+    ],
+    "labs": [
+      {"date": "2026-02-10", "loinc": "4548-4", "value": 6.8, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Amlodipine 5mg", "status": "active"},
+      {"drug": "Metformin 500mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 12,
+    "fname": "George",
+    "lname": "Taylor",
+    "dob": "1949-10-14",
+    "sex": "Male",
+    "scenario": "bp_very_high_a1c_controlled",
+    "expected_risk_band": "high",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK79"
+    },
+    "problems": [
+      {"code": "I11.9", "title": "Hypertensive heart disease without heart failure"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"},
+      {"code": "J44.1", "title": "Chronic obstructive pulmonary disease with acute exacerbation"}
+    ],
+    "vitals": [
+      {"date": "2026-02-18", "bps": 168, "bpd": 100, "weight": 240, "height": 71}
+    ],
+    "labs": [
+      {"date": "2026-01-30", "loinc": "4548-4", "value": 6.9, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Losartan 100mg", "status": "active"},
+      {"drug": "Amlodipine 10mg", "status": "active"},
+      {"drug": "Metformin 1000mg", "status": "active"},
+      {"drug": "Fluticasone-Salmeterol 250/50 inhaler", "status": "active"}
+    ],
+    "claims": {
+      "adherent": false,
+      "pdc": 0.48,
+      "fills": [
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-03-12", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-06-25", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-10-08", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2026-01-15", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-03-12", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-07-05", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-10-20", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2026-01-15", "days_supply": 30}
+      ]
+    }
+  },
+  {
+    "id": 13,
+    "fname": "Margaret",
+    "lname": "Anderson",
+    "dob": "1961-07-08",
+    "sex": "Female",
+    "scenario": "no_vitals_no_labs",
+    "expected_risk_band": "critical",
+    "insurance": {
+      "type": "medicaid",
+      "plan_name": "Utah Medicaid",
+      "member_id": "UT-441683"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"},
+      {"code": "Z85.3", "title": "Personal history of malignant neoplasm of breast"}
+    ],
+    "vitals": [],
+    "labs": [],
+    "medications": [
+      {"drug": "Lisinopril 10mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 14,
+    "fname": "Richard",
+    "lname": "Moore",
+    "dob": "1944-03-21",
+    "sex": "Male",
+    "scenario": "elderly_controlled",
+    "expected_risk_band": "low",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK80"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"}
+    ],
+    "vitals": [
+      {"date": "2026-02-20", "bps": 136, "bpd": 82, "weight": 180, "height": 70}
+    ],
+    "labs": [
+      {"date": "2026-02-01", "loinc": "4548-4", "value": 7.1, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Lisinopril 20mg", "status": "active"},
+      {"drug": "Metformin 500mg", "status": "active"},
+      {"drug": "Atorvastatin 20mg", "status": "active"}
+    ],
+    "claims": {
+      "adherent": true,
+      "pdc": 0.88,
+      "fills": [
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-04-30", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-05-30", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-06-29", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-07-29", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-08-28", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-09-27", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-10-27", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-11-26", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2025-12-26", "days_supply": 30},
+        {"ndc": "00071015623", "drug_name": "Lisinopril 20mg", "fill_date": "2026-01-25", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-04-30", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-05-30", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-06-29", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-07-29", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-08-28", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-09-27", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-10-27", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-11-26", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2025-12-26", "days_supply": 30},
+        {"ndc": "00378718201", "drug_name": "Metformin 500mg", "fill_date": "2026-01-25", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-04-30", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-05-30", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-06-29", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-07-29", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-08-28", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-09-27", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-10-27", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-11-26", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2025-12-26", "days_supply": 30},
+        {"ndc": "00071015823", "drug_name": "Atorvastatin 20mg", "fill_date": "2026-01-25", "days_supply": 30}
+      ]
+    }
+  },
+  {
+    "id": 15,
+    "fname": "Barbara",
+    "lname": "Clark",
+    "dob": "1959-11-30",
+    "sex": "Female",
+    "scenario": "a1c_just_over_9",
+    "expected_risk_band": "high",
+    "insurance": {
+      "type": "commercial",
+      "plan_name": "SelectHealth Advantage",
+      "member_id": "SH-559412"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.65", "title": "Type 2 diabetes with hyperglycemia"},
+      {"code": "F17.210", "title": "Nicotine dependence, cigarettes, uncomplicated"}
+    ],
+    "vitals": [
+      {"date": "2026-01-25", "bps": 148, "bpd": 92, "weight": 170, "height": 64}
+    ],
+    "labs": [
+      {"date": "2026-01-20", "loinc": "4548-4", "value": 9.1, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Losartan 50mg", "status": "active"},
+      {"drug": "Metformin 1000mg", "status": "active"},
+      {"drug": "Glipizide 10mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 16,
+    "fname": "Charles",
+    "lname": "Lee",
+    "dob": "1956-06-03",
+    "sex": "Male",
+    "scenario": "htn_only_uncontrolled",
+    "expected_risk_band": "high",
+    "insurance": {
+      "type": "medicaid",
+      "plan_name": "Utah Medicaid",
+      "member_id": "UT-667395"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.65", "title": "Type 2 diabetes with hyperglycemia"}
+    ],
+    "vitals": [
+      {"date": "2026-02-14", "bps": 150, "bpd": 96, "weight": 205, "height": 68}
+    ],
+    "labs": [
+      {"date": "2026-01-28", "loinc": "4548-4", "value": 10.5, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Hydrochlorothiazide 25mg", "status": "active"},
+      {"drug": "Metformin 1000mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 17,
+    "fname": "Nancy",
+    "lname": "Harris",
+    "dob": "1965-09-19",
+    "sex": "Female",
+    "scenario": "diabetes_only_controlled",
+    "expected_risk_band": "low",
+    "insurance": {
+      "type": "commercial",
+      "plan_name": "SelectHealth Advantage",
+      "member_id": "SH-218743"
+    },
+    "problems": [
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"}
+    ],
+    "vitals": [
+      {"date": "2026-02-10", "bps": 120, "bpd": 74, "weight": 150, "height": 65}
+    ],
+    "labs": [
+      {"date": "2026-01-28", "loinc": "4548-4", "value": 6.2, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Metformin 500mg", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 18,
+    "fname": "Thomas",
+    "lname": "Young",
+    "dob": "1951-04-27",
+    "sex": "Male",
+    "scenario": "partial_adherence",
+    "expected_risk_band": "high",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK81"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"}
+    ],
+    "vitals": [
+      {"date": "2026-02-05", "bps": 144, "bpd": 92, "weight": 215, "height": 71}
+    ],
+    "labs": [
+      {"date": "2025-12-10", "loinc": "4548-4", "value": 8.1, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Amlodipine 10mg", "status": "active"},
+      {"drug": "Metformin 1000mg", "status": "active"}
+    ],
+    "claims": {
+      "adherent": false,
+      "pdc": 0.62,
+      "fills": [
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-05-15", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-06-20", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-08-10", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-10-05", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2025-12-01", "days_supply": 30},
+        {"ndc": "00069154166", "drug_name": "Amlodipine 10mg", "fill_date": "2026-01-20", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-05-20", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-07-01", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-08-15", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-10-10", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-12-05", "days_supply": 30}
+      ]
+    }
+  },
+  {
+    "id": 19,
+    "fname": "Karen",
+    "lname": "Robinson",
+    "dob": "1947-01-11",
+    "sex": "Female",
+    "scenario": "excluded_esrd",
+    "expected_risk_band": "excluded",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK82"
+    },
+    "problems": [
+      {"code": "I12.0", "title": "Hypertensive CKD with stage 5 CKD or ESRD"},
+      {"code": "E11.22", "title": "Type 2 diabetes with diabetic CKD"},
+      {"code": "N18.6", "title": "End stage renal disease"}
+    ],
+    "vitals": [
+      {"date": "2026-01-18", "bps": 155, "bpd": 90, "weight": 140, "height": 62}
+    ],
+    "labs": [
+      {"date": "2025-11-20", "loinc": "4548-4", "value": 9.5, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Insulin Lispro", "status": "active"}
+    ],
+    "claims": null
+  },
+  {
+    "id": 20,
+    "fname": "Donald",
+    "lname": "King",
+    "dob": "1953-08-06",
+    "sex": "Male",
+    "scenario": "improving_trend",
+    "expected_risk_band": "medium",
+    "insurance": {
+      "type": "medicare",
+      "plan_name": "Original Medicare Parts A, B, D",
+      "member_id": "1EG4-TE5-MK83"
+    },
+    "problems": [
+      {"code": "I10", "title": "Essential hypertension"},
+      {"code": "E11.9", "title": "Type 2 diabetes without complications"}
+    ],
+    "vitals": [
+      {"date": "2025-11-01", "bps": 158, "bpd": 96, "weight": 220, "height": 69},
+      {"date": "2025-12-15", "bps": 146, "bpd": 90, "weight": 215, "height": 69},
+      {"date": "2026-02-01", "bps": 138, "bpd": 86, "weight": 210, "height": 69}
+    ],
+    "labs": [
+      {"date": "2025-09-01", "loinc": "4548-4", "value": 8.8, "description": "Hemoglobin A1c"},
+      {"date": "2026-01-15", "loinc": "4548-4", "value": 7.5, "description": "Hemoglobin A1c"}
+    ],
+    "medications": [
+      {"drug": "Losartan 100mg", "status": "active"},
+      {"drug": "Amlodipine 5mg", "status": "active"},
+      {"drug": "Metformin 1000mg", "status": "active"}
+    ],
+    "claims": {
+      "adherent": true,
+      "pdc": 0.85,
+      "fills": [
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-04-30", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-05-30", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-06-29", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-07-29", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-08-28", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-09-27", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-10-27", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-11-26", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2025-12-26", "days_supply": 30},
+        {"ndc": "00093731898", "drug_name": "Losartan 100mg", "fill_date": "2026-01-25", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-04-30", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-05-30", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-06-29", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-07-29", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-08-28", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-09-27", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-10-27", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-11-26", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2025-12-26", "days_supply": 30},
+        {"ndc": "00069154066", "drug_name": "Amlodipine 5mg", "fill_date": "2026-01-25", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-03-01", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-03-31", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-04-30", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-05-30", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-06-29", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-07-29", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-08-28", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-09-27", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-10-27", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-11-26", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2025-12-26", "days_supply": 30},
+        {"ndc": "00378718301", "drug_name": "Metformin 1000mg", "fill_date": "2026-01-25", "days_supply": 30}
+      ]
+    }
+  }
+]
