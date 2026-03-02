@@ -68,8 +68,7 @@ function formatRelativeDate(dateStr: string): string {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function CustomTooltip({ active, payload }: any) {
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: { band: string; count: number; key: string } }> }) {
   if (!active || !payload?.length) return null;
   const { band, count, key } = payload[0].payload;
   return (

@@ -1,12 +1,73 @@
 # MedAssist — AI Clinical Decision Support System
 
-Hello World
-
 A clinician workstation powered by GPT-4o with 5 domain-specific healthcare tools, a 5-layer verification system, FHIR R4 integration, and interactive clinical visualizations. Built with Next.js 14 and the Vercel AI SDK v6.
 
 **Live Demo**: [healthbot-liard.vercel.app](https://healthbot-liard.vercel.app)
 
-**Open Source Eval Dataset**: [medassist-eval on npm](https://www.npmjs.com/package/medassist-eval) — 85 clinical AI test cases published as a public package for healthcare agent benchmarking
+---
+
+## Open Source Contribution
+
+### medassist-eval — Clinical AI Evaluation Dataset
+
+[![npm](https://img.shields.io/npm/v/medassist-eval)](https://www.npmjs.com/package/medassist-eval) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+**85 clinical AI test cases** published as an open-source npm package for healthcare agent benchmarking and testing. Built from MedAssist's production test suite and released under the MIT license.
+
+```bash
+npm install medassist-eval
+```
+
+```typescript
+import { allCases, getCasesByCategory, getCasesBySeverity } from "medassist-eval";
+
+const drugCases = getCasesByCategory("drug_interaction"); // 5 cases
+const critical = getCasesBySeverity("critical");           // 8 safety-critical cases
+```
+
+#### 12 Evaluation Categories
+
+| Category | Cases | What It Tests |
+|----------|-------|---------------|
+| Drug Interactions | 5 | Allergy cross-reactivity, NSAID conflicts, RAAS blockade |
+| Dosing Validation | 5 | Dose range checks, indication-specific dosing, max dose limits |
+| Lab Interpretation | 5 | Reference range analysis, trend detection, medication-lab correlations |
+| Medication Reconciliation | 6 | Chart vs EHR discrepancies, therapy gaps, duration alerts |
+| Symptom Lookup | 5 | Symptom-to-condition mapping, urgency triage, escalation rules |
+| Insurance Coverage | 5 | Prior auth, formulary tiers, step therapy, cost estimation |
+| Provider Search | 4 | Specialty matching, availability filtering |
+| Appointment Availability | 4 | Slot finding, conflict detection, scheduling constraints |
+| Verification Layer | 12 | 5-layer verification (fact check, hallucination, confidence, domain, human-in-the-loop) |
+| Patient Data Integrity | 20 | Reference ranges, body system scores, lab trends, BP readings |
+| Clinical Calculation | 9 | ASCVD risk, penicillin cross-reactivity, input validation |
+| Utility Functions | 3 | Time formatting, display helpers |
+
+#### Severity Distribution
+
+- **Critical** (8) — Patient safety risks requiring immediate action
+- **High** (12) — Significant clinical impact
+- **Medium** (25) — Moderate clinical relevance
+- **Low** (40) — Validation and structural checks
+
+#### Clinical Domains Covered
+
+Pharmacology, Emergency Medicine, Cardiology, Nephrology, Laboratory Medicine, Hepatology, ENT, Medication Safety, Insurance, Clinical Assessment, and more.
+
+**npm**: [npmjs.com/package/medassist-eval](https://www.npmjs.com/package/medassist-eval)
+**GitHub**: [github.com/gord-sims/medassist-eval](https://github.com/gord-sims/medassist-eval)
+
+### CareGap — Chronic Care Risk Detector for OpenEMR
+
+Full-stack chronic care gap detection system built on OpenEMR with a Claude-powered AI agent, CMS quality measure logic, Blue Button Medicare claims integration, and coverage-aware patient outreach. Published as an open-source reference implementation.
+
+- **20 agent tools** across 7 categories (patient, clinical, risk, alerts, followups, claims, screening)
+- **CMS measure gap detection** — CMS165 (BP control) and CMS122 (HbA1c control) with spec-compliant exclusion logic
+- **Blue Button Medicare integration** — PDC medication adherence from Part D claims data
+- **Coverage-aware recommendations** — every alert includes patient out-of-pocket cost under their insurance
+- **3-layer guardrails** — input filter, system prompt lockdown, output screening
+- **Dockerized** — full stack runs via `docker-compose up -d` (FastAPI + React + OpenEMR + MySQL)
+
+**GitHub**: [github.com/danielargaez7/CareGap](https://github.com/danielargaez7/CareGap)
 
 ---
 

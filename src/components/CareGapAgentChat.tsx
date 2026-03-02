@@ -225,33 +225,33 @@ Would you like me to create follow-up tasks for these patients?`,
 
 **Schedule Visit (5 tasks):**
 
-1. **Eugene Jackson** — Urgent BP + diabetes follow-up. Due 2026-03-03.
+1. **Eugene Jackson** — Urgent BP + diabetes follow-up. Due **2026-03-22**.
    Medicare — Office visit $0
-2. **Patricia Williams** — COPD + diabetes management. Due 2026-03-03.
+2. **Patricia Williams** — COPD + diabetes management. Due **2026-03-22**.
    Medicaid — Office visit $0
-3. **Margaret Anderson** — Annual Wellness Visit (no data on file). Due 2026-03-05.
+3. **Margaret Anderson** — Annual Wellness Visit (no data on file). Due **2026-03-22**.
    Medicaid — AWV $0
-4. **Barbara Clark** — Diabetes follow-up + lung CT screening. Due 2026-03-07.
+4. **Barbara Clark** — Diabetes follow-up + lung CT screening. Due **2026-03-22**.
    Commercial — Office visit $25-50 copay
-5. **Dorothy Henderson** — BP management + CKD monitoring. Due 2026-03-07.
+5. **Dorothy Henderson** — BP management + CKD monitoring. Due **2026-03-22**.
    Medicare — Office visit $0
 
 **Order Lab (2 tasks):**
 
-6. **Robert Chen** — Order HbA1c (missing despite diabetes Dx). Due 2026-03-01.
-7. **Patricia Williams** — Order updated HbA1c (last was 10.2%). Due 2026-03-01.
+6. **Robert Chen** — Order HbA1c (missing despite diabetes Dx). Due **2026-03-22**.
+7. **Patricia Williams** — Order updated HbA1c (last was 10.2%). Due **2026-03-22**.
 
 **Call Patient (3 tasks):**
 
-8. **Linda Martinez** — Discuss medication adherence barriers (PDC 42%). Due 2026-02-28.
-9. **Thomas Young** — Discuss medication fill gaps (PDC 72%). Due 2026-03-02.
-10. **Susan Taylor** — Discuss medication adherence (PDC 65%). Due 2026-03-02.
+8. **Linda Martinez** — Discuss medication adherence barriers (PDC 42%). Due **2026-03-22**.
+9. **Thomas Young** — Discuss medication fill gaps (PDC 72%). Due **2026-03-22**.
+10. **Susan Taylor** — Discuss medication adherence (PDC 65%). Due **2026-03-22**.
 
 Summary
 
-**10 follow-up tasks** created: 5 schedule_visit, 2 order_lab, 3 call_patient. All tasks assigned to care coordination team with due dates based on urgency.
+**10 follow-up tasks** created: 5 schedule_visit, 2 order_lab, 3 call_patient. All tasks assigned to care coordination team with due dates 3 weeks out (**2026-03-22**).
 
-Would you like me to send automated calls to these patients?`,
+Would you like me to run a full risk assessment?`,
     tool_calls: [
       { tool: "get_high_risk_patients", input: { limit: 10 }, duration_ms: 118 },
       { tool: "create_followup", input: { pid: 2, task_type: "schedule_visit", detail: "Urgent BP + diabetes follow-up" }, duration_ms: 45 },
@@ -382,6 +382,7 @@ export default function CareGapAgentChat() {
   const [feedback, setFeedback] = useState<Record<string, "up" | "down">>({});
   const [correctionOpen, setCorrectionOpen] = useState<string | null>(null);
   const [correctionText, setCorrectionText] = useState("");
+  const [completedActions, setCompletedActions] = useState<string[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
   const loadedRef = useRef(false);
 
@@ -526,6 +527,10 @@ export default function CareGapAgentChat() {
 
     const preloadedKey = matchPreloaded(msg);
     if (preloadedKey) {
+      // Track completed actions so buttons hide globally
+      if (preloadedKey === "Send automated calls and emails") {
+        setCompletedActions((prev) => prev.includes("Send Calls & Emails") ? prev : [...prev, "Send Calls & Emails"]);
+      }
       sendPreloadedAnimated(msg, preloadedKey);
     } else {
       sendStreaming(msg);
@@ -547,6 +552,7 @@ export default function CareGapAgentChat() {
   function resetChat() {
     setMessages([]);
     setFeedback({});
+    setCompletedActions([]);
     setCorrectionOpen(null);
     setCorrectionText("");
     if (typeof window !== "undefined") {
@@ -626,7 +632,7 @@ export default function CareGapAgentChat() {
               ) : (
                 <div className="max-w-[85%]">
                   <div className="bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
-                    <CareGapFormattedMessage content={msg.content} onAction={(m) => send(m)} />
+                    <CareGapFormattedMessage content={msg.content} onAction={(m) => send(m)} completedActions={completedActions} />
                   </div>
 
                   {/* Tool call badge */}
@@ -709,7 +715,7 @@ export default function CareGapAgentChat() {
             {streamText ? (
               <div className="max-w-[85%]">
                 <div className="bg-gray-50 rounded-xl px-4 py-3 border border-gray-100">
-                  <CareGapFormattedMessage content={streamText} />
+                  <CareGapFormattedMessage content={streamText} completedActions={completedActions} />
                 </div>
                 {streamToolCalls.length > 0 && (
                   <CareGapToolCallBadge toolCalls={streamToolCalls} />

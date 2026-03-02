@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* ═══════════════════════════════════════════════
    MedAssist Clinical Tools — callable functions
    8 domain-specific healthcare tools
@@ -1044,7 +1043,7 @@ export function medicationReconciliation(): VerifiedToolResult<MedicationReconci
 
   const data: MedicationReconciliationResult = {
     chart_medications: chartMeds,
-    ehr_medications: ehrMeds.map(({ status: _s, ...rest }) => rest),
+    ehr_medications: ehrMeds.map(({ status: _unused, ...rest }) => rest), // eslint-disable-line @typescript-eslint/no-unused-vars
     discrepancies,
     therapy_gaps: therapyGaps,
     duration_alerts: durationAlerts,

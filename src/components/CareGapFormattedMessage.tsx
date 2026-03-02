@@ -155,9 +155,11 @@ function groupBlocks(blocks: Block[]): RenderGroup[] {
 export default function CareGapFormattedMessage({
   content,
   onAction,
+  completedActions,
 }: {
   content: string;
   onAction?: (message: string) => void;
+  completedActions?: string[];
 }) {
   const blocks = parseBlocks(content);
   const groups = groupBlocks(blocks);
@@ -234,7 +236,7 @@ export default function CareGapFormattedMessage({
 
         // Quick action offer
         if (text.toLowerCase().startsWith("would you like me to")) {
-          const available = OFFER_ACTIONS.filter((a) => !a.exclude.test(content));
+          const available = OFFER_ACTIONS.filter((a) => !a.exclude.test(content) && !(completedActions || []).includes(a.label));
           if (available.length === 0) return null;
           return (
             <div key={gi} className="mt-3 pt-3 border-t border-gray-100">

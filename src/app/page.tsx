@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// hello
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter } from "next/navigation";
@@ -14,6 +12,24 @@ import {
 } from "@/lib/patient-data";
 import type { Appointment, PrescriptionItem, LabTrendPoint } from "@/lib/patient-data";
 
+
+/* ─── Safe inline markdown renderer ─── */
+function InlineMd({ text }: { text: string }) {
+  const parts = text.split(/(\*\*.*?\*\*|\*[^*]+\*|`[^`]+`)/g);
+  return (
+    <>
+      {parts.map((part, i) => {
+        if (part.startsWith("**") && part.endsWith("**"))
+          return <strong key={i}>{part.slice(2, -2)}</strong>;
+        if (part.startsWith("*") && part.endsWith("*") && part.length > 2)
+          return <em key={i}>{part.slice(1, -1)}</em>;
+        if (part.startsWith("`") && part.endsWith("`") && part.length > 2)
+          return <code key={i} style={{ background: "#f1f5f9", padding: "1px 4px", borderRadius: 3, fontSize: 12 }}>{part.slice(1, -1)}</code>;
+        return <span key={i}>{part}</span>;
+      })}
+    </>
+  );
+}
 
 /* ─── AI text rendering helper ─── */
 const renderAIText = (text: string) => {
@@ -30,7 +46,7 @@ const renderAIText = (text: string) => {
         <span style={{ fontSize: 14, marginTop: 1 }}>⚠</span>
         <span style={{ fontSize: 13, lineHeight: 1.5 }}>
           <strong style={{ color: "#d97706", fontWeight: 700 }}>{label}</strong>
-          {rest && <span style={{ color: "#374151" }} dangerouslySetInnerHTML={{ __html: ": " + inlineMd(rest) }} />}
+          {rest && <span style={{ color: "#374151" }}>: <InlineMd text={rest} /></span>}
         </span>
       </div>;
     }
@@ -39,7 +55,7 @@ const renderAIText = (text: string) => {
       const rest = warningMatch[6] || "";
       return <p key={i} style={{ fontSize: 13, margin: "2px 0", lineHeight: 1.5 }}>
         <strong style={{ color: "#dc2626", fontWeight: 700 }}>{label}</strong>
-        {rest && <span style={{ color: "#374151" }} dangerouslySetInnerHTML={{ __html: ": " + inlineMd(rest) }} />}
+        {rest && <span style={{ color: "#374151" }}>: <InlineMd text={rest} /></span>}
       </p>;
     }
     // Headers
@@ -48,19 +64,11 @@ const renderAIText = (text: string) => {
     // Bullet points
     if (line.match(/^[-*•]\s/)) {
       const content = line.replace(/^[-*•]\s/, "");
-      return <div key={i} style={{ display: "flex", gap: 6, margin: "2px 0", fontSize: 13, color: "#374151" }}><span style={{ color: "#6b7280" }}>&#8226;</span><span dangerouslySetInnerHTML={{ __html: inlineMd(content) }} /></div>;
+      return <div key={i} style={{ display: "flex", gap: 6, margin: "2px 0", fontSize: 13, color: "#374151" }}><span style={{ color: "#6b7280" }}>&#8226;</span><span><InlineMd text={content} /></span></div>;
     }
-    return <p key={i} style={{ fontSize: 13, color: "#374151", margin: "2px 0", lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: inlineMd(line) }} />;
+    return <p key={i} style={{ fontSize: 13, color: "#374151", margin: "2px 0", lineHeight: 1.5 }}><InlineMd text={line} /></p>;
   });
 };
-
-const inlineMd = (text: string) =>
-  text
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.+?)\*/g, "<em>$1</em>")
-    .replace(/`(.+?)`/g, '<code style="background:#f1f5f9;padding:1px 4px;border-radius:3px;font-size:12px">$1</code>')
-    .replace(/\b(Warning|WARNING|CRITICAL|CONTRAINDICATED|DOMAIN RULE VIOLATION)\b/g, '<strong style="color:#dc2626;font-weight:700">$1</strong>')
-    .replace(/\b(Allergy Alert|ALLERGY ALERT|Alert|ALERT|Caution|CAUTION)\b/g, '<strong style="color:#d97706;font-weight:700">$1</strong>');
 
 /* Data constants imported from @/lib/patient-data */
 
@@ -211,8 +219,7 @@ const ResponseCard = ({ data, onBookSlot }: { data: any; onBookSlot?: (date: str
         <div style={{ background: "#ffffff", borderRadius: 8, padding: 10, border: "1px solid #d1fae5" }}>
           {lines.map((line: string, i: number) => {
             if (!line.trim()) return <div key={i} style={{ height: 6 }} />;
-            const formatted = line.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#1e293b">$1</strong>');
-            return <p key={i} style={{ fontSize: 11, color: "#64748b", lineHeight: 1.6, margin: "2px 0" }} dangerouslySetInnerHTML={{ __html: formatted }} />;
+            return <p key={i} style={{ fontSize: 11, color: "#64748b", lineHeight: 1.6, margin: "2px 0" }}><InlineMd text={line} /></p>;
           })}
         </div>
         {data.details && (
@@ -1047,6 +1054,7 @@ const StaffView = () => {
 };
 
 /* ─── TOOL 1: Drug Interaction Checker ─── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DrugInteractionChecker = ({ medications, allergies, patientId, onToolResult }: {
   medications: typeof DEMO_PATIENT_INFO.medications;
   allergies: typeof DEMO_PATIENT_INFO.allergies;
@@ -1231,6 +1239,7 @@ const DrugInteractionChecker = ({ medications, allergies, patientId, onToolResul
 };
 
 /* ─── TOOL 2: E-Prescribe Pad ─── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const EPrescribePad = ({ allergies, currentProvider, patientName, onToolResult }: {
   allergies: typeof DEMO_PATIENT_INFO.allergies;
   currentProvider: { name: string; specialty: string };
@@ -1497,6 +1506,7 @@ const EPrescribePad = ({ allergies, currentProvider, patientName, onToolResult }
 };
 
 /* ─── TOOL 3: ASCVD Risk Calculator ─── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ASCVDRiskCalculator = ({ patientInfo, setChatOpen, setChatInput, onToolResult }: {
   patientInfo: typeof DEMO_PATIENT_INFO;
   setChatOpen: (v: boolean) => void;
@@ -1777,6 +1787,7 @@ const LAB_COLORS: Record<string, string> = {
   CRP: "#8b5cf6", Creatinine: "#14b8a6", Copper: "#f97316",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LabTrendsExplorer = () => {
   const [selectedLabs, setSelectedLabs] = useState<Record<string, boolean>>({
     K: true, LDL: false, HDL: false, CRP: false, Creatinine: false, Copper: false,
@@ -1984,6 +1995,7 @@ const LabTrendsExplorer = () => {
 };
 
 /* ─── TOOL 5: Vital Signs Timeline ─── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const VitalSignsTimeline = () => {
   const [animateLines, setAnimateLines] = useState(false);
   const systolicRef = useRef<SVGPathElement>(null);
@@ -2191,6 +2203,7 @@ const getScoreClass = (score: number): string => {
   return "red";
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PatientHealthRadar = ({ onToolResult }: { onToolResult: (entry: string) => void }) => {
   const [calculated, setCalculated] = useState(false);
   const [scores, setScores] = useState<ReturnType<typeof computeBodySystemScores>>([]);
@@ -2399,6 +2412,7 @@ export default function PatientPortal() {
 
   /* Tool context — tracks recent tool activity so AI can synthesize across tools */
   const [toolContext, setToolContext] = useState<string[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const addToolContext = (entry: string) => {
     setToolContext(prev => {
       const updated = [...prev, entry];
@@ -2635,8 +2649,9 @@ export default function PatientPortal() {
         // Auto-expand chat panel after first AI response
         if (!chatExpanded) setChatExpanded(true);
 
-        // Fetch tool calls that happened during this request
+        // Fetch tool calls that happened during this request (small delay ensures onStepFinish has fired)
         if (reqId) {
+          await new Promise((r) => setTimeout(r, 500));
           try {
             const toolRes = await fetch("/api/chat", {
               method: "POST",

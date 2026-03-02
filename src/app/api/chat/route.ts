@@ -71,7 +71,7 @@ export async function POST(req: Request) {
   let fullOutput = "";
 
   const result = streamText({
-    model: openai("gpt-4o-mini"),
+    model: openai("gpt-4o"),
     system: systemPrompt,
     messages,
     temperature: 0.3,

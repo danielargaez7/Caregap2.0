@@ -10,7 +10,16 @@ export interface Appointment {
   provider: string;
 }
 
-export const DEMO_RESPONSES: Record<string, any> = {
+export interface DemoResponse {
+  type: string;
+  severity?: string;
+  title: string;
+  content: unknown;
+  recommendation: string;
+  sources: string[];
+}
+
+export const DEMO_RESPONSES: Record<string, DemoResponse> = {
   interactions: {
     type: "alert",
     severity: "high",
