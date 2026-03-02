@@ -1,76 +1,22 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import {
   HeartPulse, LayoutDashboard, Bell, ClipboardList, MessageSquare,
   ScrollText, LogOut, Activity,
   CheckCircle2, Eye, Calendar, TestTube2, Phone,
-  AlertTriangle, Clock, Wrench, Database, User, Send,
-  Sparkles, ArrowLeft,
+  AlertTriangle, Clock, Wrench, Database, User,
+  ArrowLeft,
 } from "lucide-react";
+import {
+  CAREGAP_ALERTS,
+  CAREGAP_FOLLOWUPS,
+  CAREGAP_AUDIT_LOGS,
+} from "@/lib/caregap-data";
 
 const CareGapDashboard = dynamic(() => import("@/components/CareGapDashboard"), { ssr: false });
-
-/* ══════════════════════════════════════════════════════
-   DEMO DATA
-   ══════════════════════════════════════════════════════ */
-
-interface Alert {
-  id: number; pid: number; severity: string; alert_type: string;
-  title: string; detail: string; recommended_action: string;
-  status: string; created_at: string; closed_at: string | null;
-}
-
-interface Followup {
-  id: number; pid: number; task_type: string; due_date: string;
-  payload_json: Record<string, unknown>; status: string;
-  created_at: string; fname?: string; lname?: string; insurance_type?: string;
-}
-
-interface AuditLogEntry {
-  id: number; timestamp: string; user: string; action: string;
-  resource_type: string; pid: number | null; detail_json: Record<string, unknown>;
-  source: string;
-}
-
-const DEMO_ALERTS: Alert[] = [
-  { id: 1, pid: 2, severity: "high", alert_type: "care-gap", title: "Dual care gap: BP + A1c failing", detail: "Eugene Jackson — BP 162/98, A1c 9.4%. Heart failure patient with medication adherence below threshold (PDC 62%).", recommended_action: "Schedule urgent follow-up to adjust BP medication and review diabetes management.", status: "open", created_at: "2026-02-27T10:00:00Z", closed_at: null },
-  { id: 2, pid: 3, severity: "high", alert_type: "care-gap", title: "HbA1c critically elevated", detail: "Patricia Williams — A1c 10.2%. COPD patient not seen in 4+ months.", recommended_action: "Order HbA1c lab and schedule follow-up.", status: "open", created_at: "2026-02-27T10:05:00Z", closed_at: null },
-  { id: 3, pid: 4, severity: "high", alert_type: "adherence", title: "Medication non-adherence", detail: "Linda Martinez — Amlodipine PDC 45%, Metformin PDC 38%. BP uncontrolled at 158/96.", recommended_action: "Call patient to discuss medication barriers.", status: "open", created_at: "2026-02-27T10:10:00Z", closed_at: null },
-  { id: 4, pid: 5, severity: "high", alert_type: "care-gap", title: "No vitals or labs on file", detail: "Margaret Anderson — Hypertension and diabetes diagnoses with no monitoring data.", recommended_action: "Schedule Annual Wellness Visit.", status: "open", created_at: "2026-02-27T10:15:00Z", closed_at: null },
-  { id: 5, pid: 6, severity: "warn", alert_type: "care-gap", title: "BP uncontrolled, CKD declining", detail: "Dorothy Henderson — BP 156/94. CKD Stage 3 with eGFR 48.", recommended_action: "Schedule follow-up for BP management.", status: "open", created_at: "2026-02-27T11:00:00Z", closed_at: null },
-  { id: 6, pid: 7, severity: "warn", alert_type: "care-gap", title: "Missing HbA1c lab", detail: "Robert Chen — No HbA1c on file despite diabetes diagnosis.", recommended_action: "Order HbA1c lab. Check PHQ-9 status.", status: "open", created_at: "2026-02-27T11:05:00Z", closed_at: null },
-  { id: 7, pid: 8, severity: "warn", alert_type: "care-gap", title: "A1c above threshold, smoker", detail: "Barbara Clark — A1c 9.1%. Current smoker eligible for lung cancer screening.", recommended_action: "Schedule follow-up and lung CT.", status: "open", created_at: "2026-02-27T11:10:00Z", closed_at: null },
-  { id: 8, pid: 11, severity: "warn", alert_type: "adherence", title: "Partial medication adherence", detail: "Thomas Young — PDC 72%. BP and A1c currently controlled but at risk.", recommended_action: "Call patient to discuss fill gaps.", status: "open", created_at: "2026-02-27T11:15:00Z", closed_at: null },
-  { id: 9, pid: 12, severity: "info", alert_type: "care-gap", title: "BP borderline", detail: "James Whitfield — BP 138/88. Trending toward uncontrolled.", recommended_action: "Recheck BP at next visit.", status: "open", created_at: "2026-02-27T12:00:00Z", closed_at: null },
-];
-
-const DEMO_FOLLOWUPS: Followup[] = [
-  { id: 1, pid: 2, task_type: "schedule_visit", due_date: "2026-03-03", payload_json: { reason: "Urgent BP + diabetes follow-up", patient: "Eugene Jackson" }, status: "open", created_at: "2026-02-27T10:00:00Z", fname: "Eugene", lname: "Jackson", insurance_type: "medicare" },
-  { id: 2, pid: 3, task_type: "order_lab", due_date: "2026-03-01", payload_json: { test: "HbA1c", patient: "Patricia Williams" }, status: "open", created_at: "2026-02-27T10:05:00Z", fname: "Patricia", lname: "Williams", insurance_type: "medicaid" },
-  { id: 3, pid: 4, task_type: "call_patient", due_date: "2026-02-28", payload_json: { reason: "Discuss medication adherence barriers", patient: "Linda Martinez" }, status: "open", created_at: "2026-02-27T10:10:00Z", fname: "Linda", lname: "Martinez", insurance_type: "medicaid" },
-  { id: 4, pid: 5, task_type: "schedule_visit", due_date: "2026-03-05", payload_json: { reason: "Annual Wellness Visit — no data on file", patient: "Margaret Anderson" }, status: "open", created_at: "2026-02-27T10:15:00Z", fname: "Margaret", lname: "Anderson", insurance_type: "medicaid" },
-  { id: 5, pid: 1, task_type: "schedule_visit", due_date: "2026-03-10", payload_json: { reason: "Mammography screening", patient: "Maria Santos" }, status: "open", created_at: "2026-02-27T12:00:00Z", fname: "Maria", lname: "Santos", insurance_type: "medicare" },
-  { id: 6, pid: 7, task_type: "order_lab", due_date: "2026-03-01", payload_json: { test: "HbA1c", patient: "Robert Chen" }, status: "open", created_at: "2026-02-27T11:05:00Z", fname: "Robert", lname: "Chen", insurance_type: "commercial" },
-  { id: 7, pid: 8, task_type: "schedule_visit", due_date: "2026-03-07", payload_json: { reason: "Diabetes follow-up + lung CT screening", patient: "Barbara Clark" }, status: "open", created_at: "2026-02-27T11:10:00Z", fname: "Barbara", lname: "Clark", insurance_type: "commercial" },
-  { id: 8, pid: 11, task_type: "call_patient", due_date: "2026-03-02", payload_json: { reason: "Discuss medication fill gaps", patient: "Thomas Young" }, status: "open", created_at: "2026-02-27T11:15:00Z", fname: "Thomas", lname: "Young", insurance_type: "medicare" },
-];
-
-const DEMO_AUDIT_LOGS: AuditLogEntry[] = [
-  { id: 1, timestamp: "2026-02-28T14:30:00Z", user: "admin", action: "chat_message_sent", resource_type: "chat", pid: null, detail_json: { message: "What are the open alerts for Eugene Jackson?" }, source: "agent" },
-  { id: 2, timestamp: "2026-02-28T14:30:02Z", user: "admin", action: "tool_call_executed", resource_type: "chat", pid: 2, detail_json: { tool: "get_open_alerts", duration_ms: 45 }, source: "agent" },
-  { id: 3, timestamp: "2026-02-28T14:30:03Z", user: "admin", action: "chat_message_received", resource_type: "chat", pid: null, detail_json: { message: "Eugene Jackson has 1 open alert." }, source: "agent" },
-  { id: 4, timestamp: "2026-02-28T14:25:00Z", user: "admin", action: "alert_acknowledged", resource_type: "alert", pid: 12, detail_json: { new_status: "ack" }, source: "api" },
-  { id: 5, timestamp: "2026-02-28T14:20:00Z", user: "admin", action: "followup_completed", resource_type: "followup", pid: 4, detail_json: { task_type: "call_patient" }, source: "api" },
-  { id: 6, timestamp: "2026-02-28T14:15:00Z", user: "admin", action: "risk_assessment_run", resource_type: "risk_assessment", pid: 2, detail_json: { score: 0.91, risk_band: "critical", alerts_created: 1 }, source: "risk_engine" },
-  { id: 7, timestamp: "2026-02-28T14:10:00Z", user: "admin", action: "alert_created", resource_type: "alert", pid: 2, detail_json: { severity: "high", title: "Dual care gap: BP + A1c failing" }, source: "risk_engine" },
-  { id: 8, timestamp: "2026-02-28T14:05:00Z", user: "admin", action: "patient_data_accessed", resource_type: "patient", pid: 2, detail_json: { data_type: "vitals" }, source: "api" },
-  { id: 9, timestamp: "2026-02-28T14:00:00Z", user: "admin", action: "followup_created", resource_type: "followup", pid: 2, detail_json: { task_type: "schedule_visit", due_date: "2026-03-03" }, source: "risk_engine" },
-  { id: 10, timestamp: "2026-02-28T13:55:00Z", user: "admin", action: "alert_closed", resource_type: "alert", pid: 6, detail_json: { new_status: "closed" }, source: "api" },
-  { id: 11, timestamp: "2026-02-28T13:50:00Z", user: "admin", action: "claims_synced", resource_type: "claims", pid: 4, detail_json: { result: "Synced 12 EOBs" }, source: "api" },
-  { id: 12, timestamp: "2026-02-28T13:45:00Z", user: "admin", action: "cohort_assessed", resource_type: "agent_run", pid: null, detail_json: { total: 18, assessed: 18, errors: 0 }, source: "agent" },
-];
+const CareGapAgentChat = dynamic(() => import("@/components/CareGapAgentChat"), { ssr: false });
 
 /* ══════════════════════════════════════════════════════
    HELPERS
@@ -103,7 +49,7 @@ const SEVERITY_STYLES: Record<string, { bg: string; dot: string }> = {
 const TYPE_LABELS: Record<string, string> = { "care-gap": "Care Gap", adherence: "Adherence", utilization: "Utilization" };
 
 function AlertQueueView() {
-  const [alerts, setAlerts] = useState(DEMO_ALERTS);
+  const [alerts, setAlerts] = useState(CAREGAP_ALERTS);
   const [filterStatus, setFilterStatus] = useState("open");
   const [filterSeverity, setFilterSeverity] = useState("");
 
@@ -205,7 +151,7 @@ function summarizePayload(p: Record<string, unknown>): string {
 }
 
 function FollowupTrackerView() {
-  const [followups, setFollowups] = useState(DEMO_FOLLOWUPS);
+  const [followups, setFollowups] = useState(CAREGAP_FOLLOWUPS);
   const [filterStatus, setFilterStatus] = useState("open");
 
   const filtered = followups.filter(f => !filterStatus || f.status === filterStatus);
@@ -338,7 +284,7 @@ function AuditLogView() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {DEMO_AUDIT_LOGS.map(log => {
+            {CAREGAP_AUDIT_LOGS.map(log => {
               const config = ACTION_CONFIG[log.action] || { label: log.action, color: "bg-gray-100 text-gray-700", Icon: Activity };
               const Icon = config.Icon;
               return (
@@ -354,149 +300,6 @@ function AuditLogView() {
             })}
           </tbody>
         </table>
-      </div>
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════
-   AGENT CHAT VIEW (simplified demo)
-   ══════════════════════════════════════════════════════ */
-
-const CHAT_SUGGESTIONS = [
-  "Who are my highest risk patients?",
-  "Show me open alerts",
-  "Summarize care gaps",
-];
-
-const CHAT_RESPONSES: Record<string, string> = {
-  "Who are my highest risk patients?": "Your highest risk patients are:\n\n1. **Eugene Jackson** (Score: 91) — Critical. BP 162/98, A1c 9.4%. Heart failure with low adherence (PDC 62%).\n2. **Patricia Williams** (Score: 87) — Critical. A1c 10.2%, COPD exacerbation. Not seen in 4+ months.\n3. **Linda Martinez** (Score: 82) — Critical. BP 158/96, Amlodipine PDC 45%, Metformin PDC 38%.\n4. **Margaret Anderson** (Score: 78) — Critical. No vitals or labs on file despite HTN + T2DM diagnoses.",
-  "Show me open alerts": "You have **9 open alerts**:\n\n- 4 HIGH severity (Eugene Jackson, Patricia Williams, Linda Martinez, Margaret Anderson)\n- 4 WARN severity (Dorothy Henderson, Robert Chen, Barbara Clark, Thomas Young)\n- 1 INFO (James Whitfield — BP borderline)\n\nThe most urgent: Eugene Jackson has dual care gaps (BP + A1c) with heart failure.",
-  "Summarize care gaps": "**Panel Summary (18 patients):**\n\n- Critical: 4 patients (22%)\n- High: 6 patients (33%)\n- Medium: 3 patients (17%)\n- Low: 5 patients (28%)\n\n**Key gaps:** CMS165 BP control rate is 58% (target 70%). CMS122 A1c poor control rate is 21% (target <15%). 3 patients have medication adherence below 80% PDC threshold.",
-};
-
-interface ChatMsg { role: "user" | "assistant"; content: string; toolCount?: number; fid?: string }
-
-const CHAT_TOOL_COUNTS: Record<string, number> = {
-  "Who are my highest risk patients?": 2,
-  "Show me open alerts": 1,
-  "Summarize care gaps": 3,
-};
-
-function AgentChatView() {
-  const [messages, setMessages] = useState<ChatMsg[]>([]);
-  const [input, setInput] = useState("");
-  const [typing, setTyping] = useState(false);
-  const [feedback, setFeedback] = useState<Record<string, "up" | "down">>({});
-  const [correctionOpen, setCorrectionOpen] = useState<string | null>(null);
-  const [correctionText, setCorrectionText] = useState("");
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, typing]);
-
-  function handleFeedback(fid: string, score: "up" | "down") {
-    setFeedback(prev => ({ ...prev, [fid]: score }));
-    if (score === "down") setCorrectionOpen(fid);
-    else setCorrectionOpen(null);
-  }
-
-  function submitCorrection() {
-    setCorrectionOpen(null);
-    setCorrectionText("");
-  }
-
-  function send(text?: string) {
-    const msg = (text || input).trim();
-    if (!msg || typing) return;
-    setInput("");
-    setMessages(prev => [...prev, { role: "user", content: msg }]);
-    setTyping(true);
-
-    const responseKey = Object.keys(CHAT_RESPONSES).find(k => msg.toLowerCase().includes(k.toLowerCase().split(" ").slice(0, 3).join(" ")));
-    const response = responseKey ? CHAT_RESPONSES[responseKey] : `I can help with patient risk analysis, care gap summaries, and alert management. Try asking "Who are my highest risk patients?" or "Show me open alerts".`;
-    const toolCount = responseKey ? (CHAT_TOOL_COUNTS[responseKey] || 0) : 0;
-    const fid = `agent-${Date.now()}`;
-
-    setTimeout(() => {
-      setMessages(prev => [...prev, { role: "assistant", content: response, toolCount, fid }]);
-      setTyping(false);
-    }, 800);
-  }
-
-  return (
-    <div className="flex flex-col h-[calc(100vh-10rem)]">
-      <div className="flex items-center gap-2.5 mb-4">
-        <MessageSquare className="w-5 h-5 text-blue-600" />
-        <div>
-          <h2 className="text-lg font-bold text-gray-900">Agent Chat</h2>
-          <p className="text-xs text-gray-500">Ask about patient risks, care gaps, and quality measures.</p>
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-y-auto bg-white rounded-t-xl border border-b-0 border-gray-200 p-4 space-y-4">
-        {messages.length === 0 && !typing && (
-          <div className="flex flex-col items-center justify-center h-full text-gray-400 gap-4">
-            <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center">
-              <Sparkles className="w-7 h-7 text-blue-400" />
-            </div>
-            <p className="text-sm font-medium text-gray-600">Clinical AI Assistant</p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {CHAT_SUGGESTIONS.map(s => (
-                <button key={s} onClick={() => send(s)} className="px-3 py-1.5 text-xs bg-gray-100 hover:bg-blue-50 hover:text-blue-700 text-gray-600 rounded-full transition-colors">{s}</button>
-              ))}
-            </div>
-          </div>
-        )}
-        {messages.map((msg, i) => {
-          const fid = msg.fid || `agent-msg-${i}`;
-          return (
-            <div key={i} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
-              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1">{msg.role === "user" ? "You" : "CareGap"}</span>
-              <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm whitespace-pre-wrap ${msg.role === "user" ? "text-white" : "bg-gray-100 text-gray-900"}`} style={msg.role === "user" ? { backgroundColor: "#0078c7" } : undefined}>
-                {msg.content.split(/(\*\*.*?\*\*)/).map((part, j) => part.startsWith("**") && part.endsWith("**") ? <strong key={j}>{part.slice(2, -2)}</strong> : part)}
-              </div>
-              {msg.role === "assistant" && (
-                <>
-                  <div className="flex items-center gap-1.5 mt-1.5 ml-1">
-                    {/* Tool count badge */}
-                    {msg.toolCount && msg.toolCount > 0 && (
-                      <span className="inline-flex items-center gap-1 text-[10px] text-slate-500 bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></svg>
-                        {msg.toolCount} tool{msg.toolCount > 1 ? "s" : ""} used
-                      </span>
-                    )}
-                    {/* Thumbs up */}
-                    <button onClick={() => handleFeedback(fid, "up")} title="Helpful" className="p-0.5 rounded transition-colors" style={{ color: feedback[fid] === "up" ? "#22c55e" : "#94a3b8" }}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill={feedback[fid] === "up" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" /></svg>
-                    </button>
-                    {/* Thumbs down */}
-                    <button onClick={() => handleFeedback(fid, "down")} title="Not helpful" className="p-0.5 rounded transition-colors" style={{ color: feedback[fid] === "down" ? "#ef4444" : "#94a3b8" }}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill={feedback[fid] === "down" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" /></svg>
-                    </button>
-                    {feedback[fid] === "up" && <span className="text-[10px] text-gray-400 ml-0.5">Thanks!</span>}
-                  </div>
-                  {/* Correction input on thumbs down */}
-                  {correctionOpen === fid && (
-                    <div className="flex gap-1.5 items-end mt-1.5 ml-1 max-w-[80%]">
-                      <input value={correctionText} onChange={e => setCorrectionText(e.target.value)} onKeyDown={e => e.key === "Enter" && submitCorrection()} placeholder="What would be better? (optional)" className="flex-1 text-[11px] px-2 py-1 border border-gray-200 rounded-md outline-none text-gray-700 bg-white" />
-                      <button onClick={() => submitCorrection()} className="text-[10px] px-2.5 py-1 bg-gray-100 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-200 whitespace-nowrap">Submit</button>
-                      <button onClick={() => { setCorrectionOpen(null); setCorrectionText(""); }} className="text-[10px] px-1.5 py-1 text-gray-400 hover:text-gray-600">Skip</button>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          );
-        })}
-        {typing && (
-          <div className="flex justify-start"><div className="bg-gray-100 rounded-xl px-4 py-3"><div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" /><div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} /><div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} /></div></div></div>
-        )}
-        <div ref={bottomRef} />
-      </div>
-
-      <div className="flex gap-2 p-3 bg-white border border-gray-200 rounded-b-xl">
-        <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === "Enter" && send()} placeholder="Ask about patient risks..." className="flex-1 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <button onClick={() => send()} disabled={typing || !input.trim()} className="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"><Send className="w-4 h-4" /></button>
       </div>
     </div>
   );
@@ -598,7 +401,7 @@ export default function CareGapPage() {
         {activeTab === "dashboard" && <CareGapDashboard />}
         {activeTab === "alerts" && <AlertQueueView />}
         {activeTab === "followups" && <FollowupTrackerView />}
-        {activeTab === "agent" && <AgentChatView />}
+        {activeTab === "agent" && <CareGapAgentChat />}
         {activeTab === "audit" && <AuditLogView />}
       </main>
 

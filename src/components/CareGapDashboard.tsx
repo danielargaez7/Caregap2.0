@@ -4,6 +4,7 @@ import { Activity, BarChart2, Users, Flag } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, CartesianGrid,
 } from "recharts";
+import { CAREGAP_PATIENTS } from "@/lib/caregap-data";
 
 /* ── Demo data ── */
 interface Assessment {
@@ -18,26 +19,17 @@ interface Assessment {
   insurance_type: string;
 }
 
-const DEMO_ASSESSMENTS: Assessment[] = [
-  { id: 1, pid: 1, score: 0.18, risk_band: "low", flags_json: {}, computed_at: "2026-02-28T12:00:00Z", fname: "Maria", lname: "Santos", insurance_type: "medicare" },
-  { id: 2, pid: 2, score: 0.91, risk_band: "critical", flags_json: { bp_uncontrolled: true, a1c_failing: true, low_adherence: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Eugene", lname: "Jackson", insurance_type: "medicare" },
-  { id: 3, pid: 3, score: 0.87, risk_band: "critical", flags_json: { a1c_failing: true, copd_exacerbation: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Patricia", lname: "Williams", insurance_type: "medicaid" },
-  { id: 4, pid: 4, score: 0.82, risk_band: "critical", flags_json: { bp_uncontrolled: true, low_adherence: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Linda", lname: "Martinez", insurance_type: "medicaid" },
-  { id: 5, pid: 5, score: 0.78, risk_band: "critical", flags_json: { no_vitals: true, no_labs: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Margaret", lname: "Anderson", insurance_type: "medicaid" },
-  { id: 6, pid: 6, score: 0.72, risk_band: "high", flags_json: { bp_uncontrolled: true, ckd_declining: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Dorothy", lname: "Henderson", insurance_type: "medicare" },
-  { id: 7, pid: 7, score: 0.68, risk_band: "high", flags_json: { missing_a1c: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Robert", lname: "Chen", insurance_type: "commercial" },
-  { id: 8, pid: 8, score: 0.65, risk_band: "high", flags_json: { a1c_failing: true, smoker: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Barbara", lname: "Clark", insurance_type: "commercial" },
-  { id: 9, pid: 9, score: 0.58, risk_band: "high", flags_json: { bp_uncontrolled: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Charles", lname: "Lee", insurance_type: "medicare" },
-  { id: 10, pid: 10, score: 0.55, risk_band: "high", flags_json: { low_adherence: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Susan", lname: "Taylor", insurance_type: "medicare" },
-  { id: 11, pid: 11, score: 0.52, risk_band: "high", flags_json: { bp_borderline: true }, computed_at: "2026-02-28T12:00:00Z", fname: "Thomas", lname: "Young", insurance_type: "medicare" },
-  { id: 12, pid: 12, score: 0.42, risk_band: "medium", flags_json: { bp_borderline: true }, computed_at: "2026-02-28T12:00:00Z", fname: "James", lname: "Whitfield", insurance_type: "medicare" },
-  { id: 13, pid: 13, score: 0.38, risk_band: "medium", flags_json: {}, computed_at: "2026-02-28T12:00:00Z", fname: "Nancy", lname: "Rivera", insurance_type: "medicaid" },
-  { id: 14, pid: 14, score: 0.35, risk_band: "medium", flags_json: {}, computed_at: "2026-02-28T12:00:00Z", fname: "Richard", lname: "Moore", insurance_type: "commercial" },
-  { id: 15, pid: 15, score: 0.22, risk_band: "low", flags_json: {}, computed_at: "2026-02-28T12:00:00Z", fname: "Helen", lname: "Garcia", insurance_type: "medicare" },
-  { id: 16, pid: 16, score: 0.15, risk_band: "low", flags_json: {}, computed_at: "2026-02-28T12:00:00Z", fname: "William", lname: "Davis", insurance_type: "medicare" },
-  { id: 17, pid: 17, score: 0.12, risk_band: "low", flags_json: {}, computed_at: "2026-02-28T12:00:00Z", fname: "Betty", lname: "Thompson", insurance_type: "commercial" },
-  { id: 18, pid: 18, score: 0.08, risk_band: "low", flags_json: {}, computed_at: "2026-02-28T12:00:00Z", fname: "Joseph", lname: "Wilson", insurance_type: "medicare" },
-];
+const DEMO_ASSESSMENTS: Assessment[] = CAREGAP_PATIENTS.map((p, i) => ({
+  id: i + 1,
+  pid: p.pid,
+  score: p.risk_score,
+  risk_band: p.risk_band,
+  flags_json: p.flags,
+  computed_at: "2026-02-28T12:00:00Z",
+  fname: p.fname,
+  lname: p.lname,
+  insurance_type: p.insurance_type,
+}));
 
 /* ── Constants ── */
 const BAND_COLORS: Record<string, string> = {
