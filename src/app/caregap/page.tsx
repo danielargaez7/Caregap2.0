@@ -375,15 +375,35 @@ const CHAT_RESPONSES: Record<string, string> = {
   "Summarize care gaps": "**Panel Summary (18 patients):**\n\n- Critical: 4 patients (22%)\n- High: 6 patients (33%)\n- Medium: 3 patients (17%)\n- Low: 5 patients (28%)\n\n**Key gaps:** CMS165 BP control rate is 58% (target 70%). CMS122 A1c poor control rate is 21% (target <15%). 3 patients have medication adherence below 80% PDC threshold.",
 };
 
-interface ChatMsg { role: "user" | "assistant"; content: string }
+interface ChatMsg { role: "user" | "assistant"; content: string; toolCount?: number; fid?: string }
+
+const CHAT_TOOL_COUNTS: Record<string, number> = {
+  "Who are my highest risk patients?": 2,
+  "Show me open alerts": 1,
+  "Summarize care gaps": 3,
+};
 
 function AgentChatView() {
   const [messages, setMessages] = useState<ChatMsg[]>([]);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
+  const [feedback, setFeedback] = useState<Record<string, "up" | "down">>({});
+  const [correctionOpen, setCorrectionOpen] = useState<string | null>(null);
+  const [correctionText, setCorrectionText] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, typing]);
+
+  function handleFeedback(fid: string, score: "up" | "down") {
+    setFeedback(prev => ({ ...prev, [fid]: score }));
+    if (score === "down") setCorrectionOpen(fid);
+    else setCorrectionOpen(null);
+  }
+
+  function submitCorrection(fid: string) {
+    setCorrectionOpen(null);
+    setCorrectionText("");
+  }
 
   function send(text?: string) {
     const msg = (text || input).trim();
@@ -394,9 +414,11 @@ function AgentChatView() {
 
     const responseKey = Object.keys(CHAT_RESPONSES).find(k => msg.toLowerCase().includes(k.toLowerCase().split(" ").slice(0, 3).join(" ")));
     const response = responseKey ? CHAT_RESPONSES[responseKey] : `I can help with patient risk analysis, care gap summaries, and alert management. Try asking "Who are my highest risk patients?" or "Show me open alerts".`;
+    const toolCount = responseKey ? (CHAT_TOOL_COUNTS[responseKey] || 0) : 0;
+    const fid = `agent-${Date.now()}`;
 
     setTimeout(() => {
-      setMessages(prev => [...prev, { role: "assistant", content: response }]);
+      setMessages(prev => [...prev, { role: "assistant", content: response, toolCount, fid }]);
       setTyping(false);
     }, 800);
   }
@@ -425,14 +447,47 @@ function AgentChatView() {
             </div>
           </div>
         )}
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
-            <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1">{msg.role === "user" ? "You" : "CareGap"}</span>
-            <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm whitespace-pre-wrap ${msg.role === "user" ? "text-white" : "bg-gray-100 text-gray-900"}`} style={msg.role === "user" ? { backgroundColor: "#0078c7" } : undefined}>
-              {msg.content.split(/(\*\*.*?\*\*)/).map((part, j) => part.startsWith("**") && part.endsWith("**") ? <strong key={j}>{part.slice(2, -2)}</strong> : part)}
+        {messages.map((msg, i) => {
+          const fid = msg.fid || `agent-msg-${i}`;
+          return (
+            <div key={i} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
+              <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1">{msg.role === "user" ? "You" : "CareGap"}</span>
+              <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm whitespace-pre-wrap ${msg.role === "user" ? "text-white" : "bg-gray-100 text-gray-900"}`} style={msg.role === "user" ? { backgroundColor: "#0078c7" } : undefined}>
+                {msg.content.split(/(\*\*.*?\*\*)/).map((part, j) => part.startsWith("**") && part.endsWith("**") ? <strong key={j}>{part.slice(2, -2)}</strong> : part)}
+              </div>
+              {msg.role === "assistant" && (
+                <>
+                  <div className="flex items-center gap-1.5 mt-1.5 ml-1">
+                    {/* Tool count badge */}
+                    {msg.toolCount && msg.toolCount > 0 && (
+                      <span className="inline-flex items-center gap-1 text-[10px] text-slate-500 bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></svg>
+                        {msg.toolCount} tool{msg.toolCount > 1 ? "s" : ""} used
+                      </span>
+                    )}
+                    {/* Thumbs up */}
+                    <button onClick={() => handleFeedback(fid, "up")} title="Helpful" className="p-0.5 rounded transition-colors" style={{ color: feedback[fid] === "up" ? "#22c55e" : "#94a3b8" }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill={feedback[fid] === "up" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" /></svg>
+                    </button>
+                    {/* Thumbs down */}
+                    <button onClick={() => handleFeedback(fid, "down")} title="Not helpful" className="p-0.5 rounded transition-colors" style={{ color: feedback[fid] === "down" ? "#ef4444" : "#94a3b8" }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill={feedback[fid] === "down" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" /></svg>
+                    </button>
+                    {feedback[fid] === "up" && <span className="text-[10px] text-gray-400 ml-0.5">Thanks!</span>}
+                  </div>
+                  {/* Correction input on thumbs down */}
+                  {correctionOpen === fid && (
+                    <div className="flex gap-1.5 items-end mt-1.5 ml-1 max-w-[80%]">
+                      <input value={correctionText} onChange={e => setCorrectionText(e.target.value)} onKeyDown={e => e.key === "Enter" && submitCorrection(fid)} placeholder="What would be better? (optional)" className="flex-1 text-[11px] px-2 py-1 border border-gray-200 rounded-md outline-none text-gray-700 bg-white" />
+                      <button onClick={() => submitCorrection(fid)} className="text-[10px] px-2.5 py-1 bg-gray-100 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-200 whitespace-nowrap">Submit</button>
+                      <button onClick={() => { setCorrectionOpen(null); setCorrectionText(""); }} className="text-[10px] px-1.5 py-1 text-gray-400 hover:text-gray-600">Skip</button>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
         {typing && (
           <div className="flex justify-start"><div className="bg-gray-100 rounded-xl px-4 py-3"><div className="flex items-center gap-1.5"><div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" /><div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} /><div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} /></div></div></div>
         )}

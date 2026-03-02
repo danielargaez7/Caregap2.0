@@ -45,7 +45,15 @@ export async function POST(req: Request) {
     }
   }
 
-  const { patientInfo, visitNotes } = await fetchPatientData(patientId ?? "demo");
+  let patientInfo, visitNotes;
+  try {
+    const data = await fetchPatientData(patientId ?? "demo");
+    patientInfo = data.patientInfo;
+    visitNotes = data.visitNotes;
+  } catch (err) {
+    console.error("[chat] Failed to fetch patient data:", err);
+    return new Response("Failed to load patient data. Please try again.", { status: 500 });
+  }
   const systemPrompt = buildSystemPrompt(patientInfo, visitNotes);
 
   const reqId = crypto.randomUUID();
@@ -63,7 +71,7 @@ export async function POST(req: Request) {
   let fullOutput = "";
 
   const result = streamText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     system: systemPrompt,
     messages,
     temperature: 0.3,

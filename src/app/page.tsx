@@ -2494,8 +2494,9 @@ export default function PatientPortal() {
             body: JSON.stringify({ messages: [{ role: "user", content: "Give me a comprehensive overview of this patient's visit history, key milestones, and current concerns." }], patientId }),
           });
           if (!res.ok) throw new Error("API error");
+          const noteRunId = res.headers.get("X-Request-Id") || `local-${Date.now()}`;
           setChatLoading(false);
-          setChatMessages((m) => [...m, { role: "assistant" as const, content: "", time: "Now" }]);
+          setChatMessages((m) => [...m, { role: "assistant" as const, content: "", time: "Now", runId: noteRunId }]);
           const reader = res.body?.getReader();
           const decoder = new TextDecoder();
           let fullText = "";
@@ -2652,6 +2653,8 @@ export default function PatientPortal() {
                   for (let i = updated.length - 1; i >= 0; i--) {
                     if (updated[i].role === "assistant" && updated[i].content) { idx = i; break; }
                   }
+                  // Tag assistant message with tool count
+                  updated[idx] = { ...updated[idx], toolCount: calls.length } as any;
                   // Insert tool cards AFTER the assistant response
                   const toolMsgs = calls.map((tc: { toolName: string; args: unknown; result: unknown }) => ({
                     role: "tool" as any, toolName: tc.toolName, args: tc.args, result: tc.result, time: "Now",
@@ -2673,36 +2676,42 @@ export default function PatientPortal() {
     }
   };
 
-  const handleFeedback = async (runId: string, score: "up" | "down") => {
-    setFeedback((prev) => ({ ...prev, [runId]: score }));
+  const handleFeedback = async (fid: string, score: "up" | "down") => {
+    setFeedback((prev) => ({ ...prev, [fid]: score }));
     if (score === "down") {
-      setCorrectionOpen(runId);
+      setCorrectionOpen(fid);
     } else {
       setCorrectionOpen(null);
+      // Only send to API if it's a real LangSmith run ID (not a local fallback)
+      if (!fid.startsWith("msg-") && !fid.startsWith("local-")) {
+        try {
+          await fetch("/api/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ runId: fid, score: 1 }),
+          });
+        } catch { /* non-critical */ }
+      }
+    }
+  };
+
+  const submitCorrection = async (fid: string) => {
+    setCorrectionOpen(null);
+    // Only send to API if it's a real LangSmith run ID
+    if (!fid.startsWith("msg-") && !fid.startsWith("local-")) {
       try {
         await fetch("/api/feedback", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ runId, score: 1 }),
+          body: JSON.stringify({
+            runId: fid,
+            score: 0,
+            comment: "User indicated response was unhelpful",
+            correction: correctionText || undefined,
+          }),
         });
       } catch { /* non-critical */ }
     }
-  };
-
-  const submitCorrection = async (runId: string) => {
-    setCorrectionOpen(null);
-    try {
-      await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          runId,
-          score: 0,
-          comment: "User indicated response was unhelpful",
-          correction: correctionText || undefined,
-        }),
-      });
-    } catch { /* non-critical */ }
     setCorrectionText("");
   };
 
@@ -3300,55 +3309,48 @@ export default function PatientPortal() {
                       <div style={{ background: "#ffffff", border: "1px solid #e5e7eb", borderRadius: "16px 16px 16px 4px", padding: "10px 14px" }}>
                         {renderAIText(msg.content || "")}
                       </div>
-                      {msg.runId && msg.content && (
-                        <div style={{ display: "flex", alignItems: "center", gap: 2, marginTop: 4, marginLeft: 4 }}>
-                          <button
-                            onClick={() => handleFeedback(msg.runId!, "up")}
-                            title="Helpful"
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              padding: "2px 4px",
-                              borderRadius: 4,
-                              color: feedback[msg.runId!] === "up" ? "#22c55e" : "#94a3b8",
-                              transition: "color 0.15s",
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill={feedback[msg.runId!] === "up" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" /></svg>
-                          </button>
-                          <button
-                            onClick={() => handleFeedback(msg.runId!, "down")}
-                            title="Not helpful"
-                            style={{
-                              background: "none",
-                              border: "none",
-                              cursor: "pointer",
-                              padding: "2px 4px",
-                              borderRadius: 4,
-                              color: feedback[msg.runId!] === "down" ? "#ef4444" : "#94a3b8",
-                              transition: "color 0.15s",
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill={feedback[msg.runId!] === "down" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" /></svg>
-                          </button>
-                          {feedback[msg.runId!] && (
-                            <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: 2 }}>
-                              {feedback[msg.runId!] === "up" ? "Thanks!" : ""}
-                            </span>
-                          )}
-                        </div>
-                      )}
-                      {correctionOpen === msg.runId && (
+                      {msg.content && (() => {
+                        const fid = msg.runId || `msg-${i}`;
+                        const tc = (msg as any).toolCount as number | undefined;
+                        return (
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4, marginLeft: 4 }}>
+                            {/* Tool count badge */}
+                            {tc && tc > 0 && (
+                              <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, color: "#64748b", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 4, padding: "1px 6px" }}>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" /></svg>
+                                {tc} tool{tc > 1 ? "s" : ""} used
+                              </span>
+                            )}
+                            {/* Thumbs up */}
+                            <button
+                              onClick={() => handleFeedback(fid, "up")}
+                              title="Helpful"
+                              style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 4px", borderRadius: 4, color: feedback[fid] === "up" ? "#22c55e" : "#94a3b8", transition: "color 0.15s", display: "flex", alignItems: "center" }}
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill={feedback[fid] === "up" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" /></svg>
+                            </button>
+                            {/* Thumbs down */}
+                            <button
+                              onClick={() => handleFeedback(fid, "down")}
+                              title="Not helpful"
+                              style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 4px", borderRadius: 4, color: feedback[fid] === "down" ? "#ef4444" : "#94a3b8", transition: "color 0.15s", display: "flex", alignItems: "center" }}
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill={feedback[fid] === "down" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17" /></svg>
+                            </button>
+                            {feedback[fid] && (
+                              <span style={{ fontSize: 10, color: "#94a3b8", marginLeft: 2 }}>
+                                {feedback[fid] === "up" ? "Thanks!" : ""}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
+                      {correctionOpen === (msg.runId || `msg-${i}`) && (
                         <div style={{ marginTop: 6, marginLeft: 4, display: "flex", gap: 6, alignItems: "flex-end" }}>
                           <input
                             value={correctionText}
                             onChange={(e) => setCorrectionText(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && msg.runId && submitCorrection(msg.runId)}
+                            onKeyDown={(e) => e.key === "Enter" && submitCorrection(msg.runId || `msg-${i}`)}
                             placeholder="What would be a better response? (optional)"
                             style={{
                               flex: 1,
@@ -3362,7 +3364,7 @@ export default function PatientPortal() {
                             }}
                           />
                           <button
-                            onClick={() => msg.runId && submitCorrection(msg.runId)}
+                            onClick={() => submitCorrection(msg.runId || `msg-${i}`)}
                             style={{
                               fontSize: 10,
                               padding: "5px 10px",
