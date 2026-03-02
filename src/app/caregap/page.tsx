@@ -1,13 +1,13 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import {
   HeartPulse, LayoutDashboard, Bell, ClipboardList, MessageSquare,
-  ScrollText, LogOut, Activity, BarChart2, Users, Flag, RefreshCw,
-  AlertCircle, CheckCircle2, Eye, Calendar, TestTube2, Phone,
-  AlertTriangle, Clock, Wrench, Database, User, Send, RotateCcw,
-  Sparkles, Loader2, Mail, ListChecks, ArrowLeft,
+  ScrollText, LogOut, Activity,
+  CheckCircle2, Eye, Calendar, TestTube2, Phone,
+  AlertTriangle, Clock, Wrench, Database, User, Send,
+  Sparkles, ArrowLeft,
 } from "lucide-react";
 
 const CareGapDashboard = dynamic(() => import("@/components/CareGapDashboard"), { ssr: false });
