@@ -400,7 +400,7 @@ function AgentChatView() {
     else setCorrectionOpen(null);
   }
 
-  function submitCorrection(fid: string) {
+  function submitCorrection(_fid: string) {
     setCorrectionOpen(null);
     setCorrectionText("");
   }
