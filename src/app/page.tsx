@@ -14,6 +14,7 @@ import {
 } from "@/lib/patient-data";
 import type { Appointment, PrescriptionItem, LabTrendPoint } from "@/lib/patient-data";
 
+
 /* ─── AI text rendering helper ─── */
 const renderAIText = (text: string) => {
   const lines = text.split("\n");
@@ -2794,8 +2795,8 @@ export default function PatientPortal() {
           {toolNavItems.map((item) => (
             <button
               key={item.label}
-              className={`nav-item ${activeNav === item.label ? "active" : ""}`}
-              onClick={() => window.open("https://caregap-production.up.railway.app/login", "_blank")}
+              className="nav-item"
+              onClick={() => router.push("/caregap")}
             >
               {item.icon}
               {item.label}
@@ -2804,8 +2805,8 @@ export default function PatientPortal() {
         </nav>
 
         <div className="sidebar-footer">
-          <div className="facility-name">Northwest Valley</div>
-          <div className="facility-address">1716 2nd Street NW<br />Albuquerque, NM 87101</div>
+          <div className="facility-name">Intermountain Medical Center</div>
+          <div className="facility-address">5121 Cottonwood St<br />Murray, UT 84107</div>
         </div>
       </aside>
 
