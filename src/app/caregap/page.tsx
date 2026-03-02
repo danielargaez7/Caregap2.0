@@ -400,7 +400,7 @@ function AgentChatView() {
     else setCorrectionOpen(null);
   }
 
-  function submitCorrection(_fid: string) {
+  function submitCorrection() {
     setCorrectionOpen(null);
     setCorrectionText("");
   }
@@ -478,8 +478,8 @@ function AgentChatView() {
                   {/* Correction input on thumbs down */}
                   {correctionOpen === fid && (
                     <div className="flex gap-1.5 items-end mt-1.5 ml-1 max-w-[80%]">
-                      <input value={correctionText} onChange={e => setCorrectionText(e.target.value)} onKeyDown={e => e.key === "Enter" && submitCorrection(fid)} placeholder="What would be better? (optional)" className="flex-1 text-[11px] px-2 py-1 border border-gray-200 rounded-md outline-none text-gray-700 bg-white" />
-                      <button onClick={() => submitCorrection(fid)} className="text-[10px] px-2.5 py-1 bg-gray-100 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-200 whitespace-nowrap">Submit</button>
+                      <input value={correctionText} onChange={e => setCorrectionText(e.target.value)} onKeyDown={e => e.key === "Enter" && submitCorrection()} placeholder="What would be better? (optional)" className="flex-1 text-[11px] px-2 py-1 border border-gray-200 rounded-md outline-none text-gray-700 bg-white" />
+                      <button onClick={() => submitCorrection()} className="text-[10px] px-2.5 py-1 bg-gray-100 border border-gray-200 rounded-md text-gray-600 hover:bg-gray-200 whitespace-nowrap">Submit</button>
                       <button onClick={() => { setCorrectionOpen(null); setCorrectionText(""); }} className="text-[10px] px-1.5 py-1 text-gray-400 hover:text-gray-600">Skip</button>
                     </div>
                   )}
