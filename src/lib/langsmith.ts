@@ -54,6 +54,18 @@ export async function updateRun(input: {
   output: string;
   toolCalls?: Array<{ toolName: string; args: unknown; result: unknown }>;
   guardrailBlocked?: boolean;
+  usage?: {
+    inputTokens?: number;
+    outputTokens?: number;
+    totalTokens?: number;
+    inputTokenDetails?: {
+      cacheReadTokens?: number;
+      cacheWriteTokens?: number;
+    };
+    outputTokenDetails?: {
+      reasoningTokens?: number;
+    };
+  };
 }): Promise<void> {
   const client = getClient();
   if (!client) return;
@@ -65,6 +77,20 @@ export async function updateRun(input: {
         response: input.output,
         tool_calls: input.toolCalls || [],
         guardrail_blocked: input.guardrailBlocked || false,
+        ...(input.usage && {
+          usage_metadata: {
+            input_tokens: input.usage.inputTokens ?? 0,
+            output_tokens: input.usage.outputTokens ?? 0,
+            total_tokens: input.usage.totalTokens ?? 0,
+            input_token_details: {
+              cache_read: input.usage.inputTokenDetails?.cacheReadTokens ?? 0,
+              cache_creation: input.usage.inputTokenDetails?.cacheWriteTokens ?? 0,
+            },
+            output_token_details: {
+              reasoning: input.usage.outputTokenDetails?.reasoningTokens ?? 0,
+            },
+          },
+        }),
       },
     });
   } catch (e) {

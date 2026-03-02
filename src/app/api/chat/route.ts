@@ -89,13 +89,14 @@ export async function POST(req: Request) {
         setTimeout(() => toolCallStore.delete(reqId), 30000);
       }
     },
-    onFinish: ({ text }) => {
+    onFinish: ({ text, totalUsage }) => {
       fullOutput = text;
-      // Update LangSmith run with final output (non-blocking)
+      // Update LangSmith run with final output + token usage (non-blocking)
       updateRun({
         runId: reqId,
         output: fullOutput,
         toolCalls: collectedToolCalls,
+        usage: totalUsage,
       }).catch(() => {});
     },
     tools: {
